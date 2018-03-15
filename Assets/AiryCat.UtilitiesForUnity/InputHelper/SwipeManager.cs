@@ -2,10 +2,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using AiryCat.Utilities.Helper;
+using AiryCat.UtilitiesForUnity.Helper;
 using UnityEngine.EventSystems;
 
-namespace AiryCat.Utilities.InputHelper
+namespace AiryCat.UtilitiesForUnity.InputHelper
 {
     public enum Swipe
     {

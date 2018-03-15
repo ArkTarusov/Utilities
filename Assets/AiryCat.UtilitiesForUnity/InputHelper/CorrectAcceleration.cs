@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AiryCat.Utilities.InputHelper
+namespace AiryCat.UtilitiesForUnity.InputHelper
 {
     public class CorrectAcceleration
     {

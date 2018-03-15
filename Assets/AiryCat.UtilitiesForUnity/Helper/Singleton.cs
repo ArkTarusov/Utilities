@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace AiryCat.Utilities.Helper
+namespace AiryCat.UtilitiesForUnity.Helper
 {
-    public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+    public class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
         private static T _instance;
         public bool IsDontDestroy = true;
@@ -42,16 +42,11 @@ namespace AiryCat.Utilities.Helper
                 }
                 _instance = (T) FindObjectOfType(typeof(T));
 
-                if (FindObjectsOfType(typeof(T)).Length > 1)
-                {
-                    Debug.LogError($"[Singleton] multiple instances of '{typeof(T)}' found!");
-                }
-
                 if (_instance == null)
                 {
-                    GameObject singleton = new GameObject();
+                    var singleton = new GameObject();
                     _instance = singleton.AddComponent<T>();
-                    singleton.name = $"[{typeof(T).ToString()}] - singleton";
+                    singleton.name = $"[{typeof(T)}] - singleton";
                     DontDestroyOnLoad(singleton);
                     Debug.Log($"[Singleton] An instance of '{typeof(T)}' was created: {singleton}");
                 }

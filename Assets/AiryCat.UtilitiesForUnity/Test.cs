@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using AiryCat.UtilitiesForUnity.Localization;
+using AiryCat.UtilitiesForUnity.Utility;
 using UnityEngine;
 
 public class Test : MonoBehaviour {
@@ -13,5 +15,5 @@ public class Test : MonoBehaviour {
         LocalizationManager.LoadLocalizedText("Eng");
 	    Debug.Log(LocalizationManager.GetLocalizedValue("hi"));
 	    Debug.Log(LocalizationManager.GetLocalizedValue("bye"));
-    }
+	}
 }
