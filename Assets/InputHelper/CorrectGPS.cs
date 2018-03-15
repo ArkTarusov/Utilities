@@ -1,23 +1,23 @@
 ﻿using UnityEngine;
 
-namespace AiryCat.Utilities.Input
+namespace AiryCat.Utilities.InputHelper
 {
     public class CorrectGPS
     {
-        private const float MinAccuracy = 1;
+        private const float MIN_ACCURACY = 1;
         private readonly float _qMetresPerSecond;
         private double _lat;
         private double _lng;
         private float _variance;
         private float _k;
-        public CorrectGPS(float qMetresPerSecond)
+        public CorrectGPS(float qMetresPerSecond, double startLat, double startLng)
         {
             _qMetresPerSecond = qMetresPerSecond;
             _variance = -1;
             _variance = Input.location.lastData.horizontalAccuracy * 2;
             Input.location.Start(0.1f, 0.1f);
-            _lat = Ether.StartLat;
-            _lng = Ether.StartLon;
+            _lat = startLat;
+            _lng = startLng;
 
         }
         public float get_K() { return _k; }
@@ -28,7 +28,7 @@ namespace AiryCat.Utilities.Input
             double lngMeasurement = Input.location.lastData.longitude;
             float accuracy = Input.location.lastData.horizontalAccuracy;
 
-            if (accuracy < MinAccuracy) accuracy = MinAccuracy;
+            if (accuracy < MIN_ACCURACY) accuracy = MIN_ACCURACY;
             if (_variance < 0)
             {
 
@@ -37,7 +37,7 @@ namespace AiryCat.Utilities.Input
             else
             {
                 _variance += _qMetresPerSecond * _qMetresPerSecond / 1000;
-                // TO DO: USE VELOCITY INFORMATION HERE TO GET A BETTER ESTIMATE OF CURRENT POSITION
+                // TODO: USE VELOCITY INFORMATION HERE TO GET A BETTER ESTIMATE OF CURRENT POSITION
 
                 _k = _variance / (_variance + accuracy * accuracy);
                 _lat += _k * (latMeasurement - _lat);

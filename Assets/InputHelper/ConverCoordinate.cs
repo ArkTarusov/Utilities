@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AiryCat.Utilities.Input
+namespace AiryCat.Utilities.InputHelper
 {
     public static class ConverCoordinate
     {

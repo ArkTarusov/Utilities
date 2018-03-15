@@ -2,10 +2,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using AiryCat.Utilities.Helper;
 using UnityEngine.EventSystems;
 
-// ReSharper disable once CheckNamespace
-namespace AiryCat.Utilities.Input
+namespace AiryCat.Utilities.InputHelper
 {
     public enum Swipe
     {
@@ -21,61 +21,8 @@ namespace AiryCat.Utilities.Input
         Click
     }
 
-    public class SwipeManager : MonoBehaviour
+    public class SwipeManager : Singleton<SwipeManager>
     {
-
-        #region Singleton
-        private static SwipeManager _instance;
-        private static bool _inited;
-
-        public static SwipeManager Instance
-        {
-            get
-            {
-                if (_applicationIsQuitting)
-                {
-                    Debug.LogWarning("[Singleton] Instance '" + typeof(SwipeManager) +
-                                     "' already destroyed on application quit." +
-                                     " Won't create again - returning null.");
-                    return null;
-                }
-
-                if (_inited)
-                    return _instance;
-
-                return new GameObject("[SwipeManager] [singleton]").AddComponent<SwipeManager>();
-            }
-        }
-
-        private static bool _applicationIsQuitting;
-
-        /// <summary>
-        /// When Unity quits, it destroys objects in a random order.
-        /// In principle, a Singleton is only destroyed when application quits.
-        /// If any script calls Instance after it have been destroyed, 
-        ///   it will create a buggy ghost object that will stay on the Editor scene
-        ///   even after stopping playing the Application. Really bad!
-        /// So, this was made to be sure we're not creating that buggy ghost object.
-        /// </summary>
-        public void OnDestroy()
-        {
-            _applicationIsQuitting = true;
-        }
-
-        private void Awake()
-        {
-            // Only one instance of SwipeManager at a time!
-            if (_inited)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            _inited = true;
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
-        #endregion
 
         #region Settings
         [Tooltip("Min swipe distance")] [SerializeField] private float _minSwipeLength = 0.5f;
@@ -90,17 +37,17 @@ namespace AiryCat.Utilities.Input
         #endregion
 
         #region Auxiliary const parameters
-        private const float EightDirAngle = 0.906f;
-        private const float FourDirAngle = 0.5f;
-        private const float DefaultDpi = 72f;
-        private const float DpcmFactor = 2.54f;
+        private const float EIGHT_DIR_ANGLE = 0.906f;
+        private const float FOUR_DIR_ANGLE = 0.5f;
+        private const float DEFAULT_DPI = 72f;
+        private const float DPCM_FACTOR = 2.54f;
 
         private static class DirectionVector
         {
-            public static readonly Vector2 Up = new Vector2(0, 1);
-            public static readonly Vector2 Down = new Vector2(0, -1);
-            public static readonly Vector2 Right = new Vector2(1, 0);
-            public static readonly Vector2 Left = new Vector2(-1, 0);
+            public static readonly Vector2 Up = Vector2.up;
+            public static readonly Vector2 Down = Vector2.down;
+            public static readonly Vector2 Right = Vector2.right;
+            public static readonly Vector2 Left = Vector2.left;
             public static readonly Vector2 UpRight = new Vector2(1, 1);
             public static readonly Vector2 UpLeft = new Vector2(-1, 1);
             public static readonly Vector2 DownRight = new Vector2(1, -1);
@@ -119,7 +66,7 @@ namespace AiryCat.Utilities.Input
         };
         #endregion
 
-        #region Events
+        #region Create Events
 
         private static void CheckNullEvents()
         {
@@ -228,8 +175,8 @@ namespace AiryCat.Utilities.Input
 
         private void Start()
         {
-            var dpi = Math.Abs(Screen.dpi) < 0.1f ? DefaultDpi : Screen.dpi;
-            _dpcm = dpi / DpcmFactor;
+            var dpi = Math.Abs(Screen.dpi) < 0.1f ? DEFAULT_DPI : Screen.dpi;
+            _dpcm = dpi / DPCM_FACTOR;
         }
 
         private void Update()
@@ -252,9 +199,9 @@ namespace AiryCat.Utilities.Input
                 var currentSwipe = _secondPressPos - _firstPressPos;
                 var swipeCm = currentSwipe.magnitude / _dpcm;
                 
-                if (swipeCm < _instance._minSwipeLength)
+                if (swipeCm < Instance._minSwipeLength)
                 {
-                    if (_instance._triggerSwipeAtMinLength) return;
+                    if (Instance._triggerSwipeAtMinLength) return;
                     if (Application.isEditor)
                     {
                         Debug.Log("[SwipeManager] Swipe was not long enough.");
@@ -279,9 +226,7 @@ namespace AiryCat.Utilities.Input
                 _swipeDirection = Swipe.None;
             }
         }
-
         
-
         private static bool GetTouchInput()
         {
             if (Input.touches.Length <= 0) return false;
@@ -299,7 +244,7 @@ namespace AiryCat.Utilities.Input
                     _secondPressPos = t.position;
                     return true;
                 default:
-                    if (_instance._triggerSwipeAtMinLength)
+                    if (Instance._triggerSwipeAtMinLength)
                     {
                         return true;
                     }
@@ -325,8 +270,7 @@ namespace AiryCat.Utilities.Input
             }
             else
             {
-                // if _triggerSwipeAtMinLength==true it is already
-                if (_instance._triggerSwipeAtMinLength)
+                if (Instance._triggerSwipeAtMinLength)
                 {
                     return true;
                 }
@@ -336,17 +280,17 @@ namespace AiryCat.Utilities.Input
         }
         private static bool IsPointerOverUiObject()
         {
-            PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-            eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            List<RaycastResult> results = new List<RaycastResult>();
+            var eventDataCurrentPosition = new PointerEventData(EventSystem.current)
+            {
+                position = new Vector2(Input.mousePosition.x, Input.mousePosition.y)
+            };
+            var results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-            bool result = results.Count > 0;
-            Debug.Log($"IsPointerOverUiObject {result}");
             return results.Count > 0;
         }
         private static bool IsDirection(Vector2 direction, Vector2 cardinalDirection)
         {
-            var angle = _instance._useEightDirections ? EightDirAngle : FourDirAngle;
+            var angle = Instance._useEightDirections ? EIGHT_DIR_ANGLE : FOUR_DIR_ANGLE;
             return Vector2.Dot(direction, cardinalDirection) > angle;
         }
 
