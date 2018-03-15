@@ -1,0 +1,12 @@
+﻿{
+	"items": [
+		{
+			"key": "hi",
+			"value": "Hi"
+		},
+		{
+			"key": "bye",
+			"value": "Bye"
+		}
+	]
+}
