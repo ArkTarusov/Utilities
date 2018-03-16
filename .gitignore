@@ -21,6 +21,12 @@ ExportedObj/
 *.booproj
 _ReSharper.*/
 
+# ======== #
+# Specials #
+# ======== #
+LICENSE.meta
+README.md.meta
+CONTRIBUTING.md.meta
 
 # ===================================#
 # Visual Studio 2015 cache directory #
