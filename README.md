@@ -15,6 +15,10 @@ Unity should support .NET 4.6
 
 To install and receive timely updates, we recommend that you connect this repository as a submodule to your project.
 
+Example command
+```
+$ git submodule add -f https://bitbucket.org/ArkTarusov/utilities_for_unity Assets/Extensions/Utilities_for_Unity
+```
 ### Running the tests
 
 For testing and example, the root directory contains Demo.unity.
