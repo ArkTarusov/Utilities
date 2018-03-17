@@ -21,9 +21,11 @@ namespace AiryCat.UtilitiesForUnity.InputHelper
         Click
     }
 
-    public class SwipeManager : Singleton<SwipeManager>
+    public class SwipeManager : Singleton<SwipeManager>,IDestroyableSingleton
     {
+        public bool CanDestroyed { get; } = true;
 
+        
         #region Settings
         [Tooltip("Min swipe distance")] [SerializeField] private float _minSwipeLength = 0.5f;
 
