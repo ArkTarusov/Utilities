@@ -19,7 +19,7 @@ namespace AiryCat.UtilitiesForUnity.Localization
 
         private void SetText()
         {
-            _text.text = LocalizationManager.GetLocalizedValue(_key, style: _style);
+            _text.text = LocalizationManager.Localized(_key, style: _style);
         }
     }
 }

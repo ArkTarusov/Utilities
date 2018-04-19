@@ -65,8 +65,10 @@ namespace AiryCat.UtilitiesForUnity.Localization
         #endregion
 
         #region Public static method
-
-        public static string GetLocalizedValue(string key, TextStyle style = TextStyle.AsItIsNow, params object[] args)
+        /// <summary>
+        /// Returns a localized string.
+        /// </summary>
+        public static string Localized(this string key, TextStyle style = TextStyle.AsItIsNow, params object[] args)
         {
             if (_localizedText == null || _localizedText.Count < 2)
             {
