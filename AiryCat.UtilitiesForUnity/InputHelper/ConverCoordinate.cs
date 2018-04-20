@@ -43,7 +43,7 @@ namespace AiryCat.UtilitiesForUnity.InputHelper
                 sinSigma = Mathf.Sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda) +
                                       (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) *
                                       (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));
-                if (sinSigma == 0)
+                if (sinSigma == 0) //-V3024
                 {
                     xOffset = 0.0f;
                     yOffset = 0.0f;
