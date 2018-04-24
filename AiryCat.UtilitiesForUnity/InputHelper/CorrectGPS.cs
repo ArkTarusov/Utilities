@@ -13,7 +13,6 @@ namespace AiryCat.UtilitiesForUnity.InputHelper
         public CorrectGPS(float qMetresPerSecond, double startLat, double startLng)
         {
             _qMetresPerSecond = qMetresPerSecond;
-            _variance = -1;
             _variance = Input.location.lastData.horizontalAccuracy * 2;
             Input.location.Start(0.1f, 0.1f);
             _lat = startLat;
