@@ -43,14 +43,13 @@ namespace AiryCat.UtilitiesForUnity.Localization
         #region Private class
 
         [Serializable]
-        private class LocalizationData
+        private struct LocalizationData
         {
             public LocalizationItem[] Items;
-
         }
 
         [Serializable]
-        private class LocalizationItem
+        private struct LocalizationItem
         {
             public string Key;
             public string Value;
