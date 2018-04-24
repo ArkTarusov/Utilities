@@ -2,16 +2,20 @@
 
 namespace AiryCat.UtilitiesForUnity.Helper
 {
-    public class Singleton<T> : MonoBehaviour where T : Singleton<T>
+    public interface IDestroyableSingleton
+    {
+        bool CanDestroyed { get; }
+    }
+
+    public class Singleton<T> : MonoBehaviour where T : Singleton<T>,IDestroyableSingleton
     {
         private static T _instance;
-        public bool IsDontDestroy = true;
         public void Awake()
         {
             if (!_instance)
             {
                 _instance = gameObject.GetComponent<T>();
-                if (IsDontDestroy)
+                if (!_instance.CanDestroyed)
                 {
                     DontDestroyOnLoad(gameObject);
                 }
@@ -47,7 +51,10 @@ namespace AiryCat.UtilitiesForUnity.Helper
                     var singleton = new GameObject();
                     _instance = singleton.AddComponent<T>();
                     singleton.name = $"[{typeof(T)}] - singleton";
-                    DontDestroyOnLoad(singleton);
+                    if (!_instance.CanDestroyed)
+                    {
+                        DontDestroyOnLoad(singleton);
+                    }
                     Debug.Log($"[Singleton] An instance of '{typeof(T)}' was created: {singleton}");
                 }
                 else

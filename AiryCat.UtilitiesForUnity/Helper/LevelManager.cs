@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace AiryCat.UtilitiesForUnity.Helper
 {
-    public class LevelManager 
+    public class LevelManager : MonoBehaviour
     {
         public void LoadLevel(int value)
         {
